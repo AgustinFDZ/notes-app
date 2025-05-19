@@ -8,4 +8,7 @@ export class CreateNoteDto {
     @IsString()
     @IsNotEmpty()
     content: string;   
+
+    @IsString()
+    state: string = 'active';
 }

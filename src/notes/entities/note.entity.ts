@@ -12,6 +12,9 @@ export class Note {
     @Column()
     content: string;
 
+    @Column()
+    state: string;
+
     @Column({default: () => 'CURRENT_TIMESTAMP'})
     createdAt: Date;
 

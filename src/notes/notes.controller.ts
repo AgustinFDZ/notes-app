@@ -46,9 +46,15 @@ export class NotesController {
     return this.notesService.update(+id, updateNoteDto);
   }
 
-  @Delete(':id')
+  @Delete('erase/:id')
   @UseGuards(AuthGuard)
   remove(@Param('id') id: string) {
-    return this.notesService.remove(+id);
+    return this.notesService.delete(+id);
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard)
+  softDelete(@Param('id') id: string) {
+    return this.notesService.softDelete(+id);
   }
 }

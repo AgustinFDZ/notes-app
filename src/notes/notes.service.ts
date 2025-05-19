@@ -29,8 +29,6 @@ export class NotesService {
   async findAll(paginationDto: PaginationDto): Promise<{ data: Note[], total: number, page: number, limit: number }> {
     const { page, limit } = paginationDto;
 
-    console.log(page, limit);
-
     const [data, total] = await this.notesRepository.findAndCount({
       skip: (page - 1) * limit,
       take: limit,
@@ -74,12 +72,24 @@ export class NotesService {
 
   }
 
-  async remove(id: number): Promise<{ message: string }> {
+  async delete(id: number): Promise<{ message: string }> {
     const result = await this.notesRepository.delete(id);
     if (result.affected === 0) {
       throw new NotFoundException('Note not found');
     }
 
+    return { message: `Note with id ${id} deleted successfully` };
+  }
+
+  async softDelete(id: number): Promise<{ message: string }> {
+    const note = await this.notesRepository.findOne({ where: { id } });
+    if (!note) {
+      throw new NotFoundException('Note not found');
+    }
+
+    note.state = 'deleted';
+
+    await this.notesRepository.save(note);
     return { message: `Note with id ${id} deleted successfully` };
   }
 }
