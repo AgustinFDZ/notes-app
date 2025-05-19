@@ -13,6 +13,11 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @Get()
+  findAll() {
+    return this.usersService.findAll();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
@@ -24,8 +29,16 @@ export class UsersController {
     return this.usersService.update(+id, updateUserDto);
   }
 
-  @Delete(':id')
+  @Delete('erase/:id')
+  @UseGuards(AuthGuard)
   delete(@Param('id') id: string) {
     return this.usersService.delete(+id);
   }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard)
+  softDelete(@Param('id') id: string) {
+    return this.usersService.softDelete(+id);
+  }
+  
 }

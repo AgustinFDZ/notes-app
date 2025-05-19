@@ -51,6 +51,14 @@ export class UsersService {
     }
   }
 
+  async findAll() {
+    try {
+      return await this.userRepository.find();
+    } catch (error) {
+      throw new BadRequestException('Error fetching users', error.message);
+    }
+  }
+
   async findOne(id: number) {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
@@ -78,6 +86,18 @@ export class UsersService {
     if (result.affected === 0) {
       throw new NotFoundException('User not found');
     }
+
+    return { message: 'User deleted successfully' }
+  }
+
+  async softDelete(id: number) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    user.state = 'deleted';
+    await this.userRepository.save(user);
 
     return { message: 'User deleted successfully' }
   }
